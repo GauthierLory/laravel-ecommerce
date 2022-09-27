@@ -23,7 +23,7 @@
                                         </svg>
                                     </div> --}}
                                     <div class="bg-yellow-200 py-1.5 px-6 rounded-full">
-                                        <p tabindex="0" class="focus:outline-none text-xs text-yellow-700">{{ $product->price }}</p>
+                                        <p tabindex="0" class="focus:outline-none text-xs text-yellow-700">{{ $product->formatted_price }}</p>
                                     </div>
                                 </div>
                                 <div class="p-4">

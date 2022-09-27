@@ -17,4 +17,8 @@ class Product extends Model
             ->withPivot('total_quantity', 'total_price');
     }
 
+    public function getFormattedPriceAttribute(): string
+    {
+        return str_replace('.', ',', $this->price / 100) . '€';
+    }
 }
