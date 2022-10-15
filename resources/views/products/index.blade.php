@@ -40,12 +40,12 @@
                                             <p tabindex="0" class="focus:outline-none text-xs text-gray-600 px-2 bg-gray-200 py-1">Complete box</p>
                                         </div>
                                     </div> --}}
-                                    <div class="flex items-center justify-between py-4">
-                                        <button class="bg-indigo-500 text-white p-2">
-                                            Ajouter au panier
-                                        </button>
-                                    </div>
-
+{{--                                    <div class="flex items-center justify-between py-4">--}}
+{{--                                        <button class="bg-indigo-500 text-white p-2">--}}
+{{--                                            Ajouter au panier--}}
+{{--                                        </button>--}}
+{{--                                    </div>--}}
+                                    <add-to-cart></add-to-cart>
                                 </div>
                             </div>
                         </div>
@@ -55,3 +55,9 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+    import AddToCart from "../../js/components/AddToCart";
+    export default {
+        components: {AddToCart}
+    }
+</script>
