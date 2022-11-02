@@ -45,7 +45,7 @@
 {{--                                            Ajouter au panier--}}
 {{--                                        </button>--}}
 {{--                                    </div>--}}
-                                    <add-to-cart></add-to-cart>
+                                    <add-to-cart :product-id="{{ $product->id }}"></add-to-cart>
                                 </div>
                             </div>
                         </div>
@@ -55,9 +55,3 @@
         </div>
     </div>
 </x-app-layout>
-<script>
-    import AddToCart from "../../js/components/AddToCart";
-    export default {
-        components: {AddToCart}
-    }
-</script>
