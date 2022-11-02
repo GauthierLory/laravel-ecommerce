@@ -9,12 +9,14 @@
 </template>
 
 <script setup>
+    import { inject } from 'vue';
     import useProduct from "../composables/products";
 
     const {add} = useProduct()
     const productId = defineProps(['productId'])
 
     const emitter = require('tiny-emitter/instance')
+    const toast = inject('toast')
 
     const addToCart = async() => {
         await axios.get('/sanctum/csrf-cookie')
@@ -22,8 +24,11 @@
             .then(async(res) => {
                 let cartCount = await add(productId)
                 emitter.emit('cartCountUpdated', cartCount)
+                toast.success('Produit ajoute au panier')
             })
-            .catch(err => console.log(err));
+            .catch(() => {
+                toast.error('Merci de vous connecter pour ajouter un produit')
+            });
     }
 </script>
 
