@@ -9,16 +9,19 @@
 </template>
 
 <script setup>
+    import useProduct from "../composables/products";
+
+    const {add} = useProduct()
     const productId = defineProps(['productId'])
+
+    const emitter = require('tiny-emitter/instance')
 
     const addToCart = async() => {
         await axios.get('/sanctum/csrf-cookie')
         await axios.get('/api/user')
             .then(async(res) => {
-                let response = await axios.post('/api/products', {
-                    productId: productId
-                })
-                console.log(response)
+                let cartCount = await add(productId)
+                emitter.emit('cartCountUpdated', cartCount)
             })
             .catch(err => console.log(err));
     }

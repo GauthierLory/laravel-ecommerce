@@ -71,4 +71,13 @@ class CartController extends Controller
     {
         //
     }
+
+    public function count(): JsonResponse
+    {
+        $count = (new CartRepository())->count();
+
+        return response()->json([
+            'count' => $count
+        ]);
+    }
 }
