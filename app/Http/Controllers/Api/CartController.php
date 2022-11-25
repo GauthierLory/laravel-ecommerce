@@ -15,11 +15,15 @@ class CartController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        $cartContent = (new CartRepository())->content();
+
+        return response()->json([
+            'cartContent' => $cartContent
+        ]);
     }
 
     /**
@@ -28,7 +32,7 @@ class CartController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $product = Product::where('id', $request->productId)->first();
 
