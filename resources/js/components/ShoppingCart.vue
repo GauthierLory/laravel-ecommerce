@@ -27,20 +27,20 @@
                             <td>
                                 <a href="#">
                                     <p class="mb-2 md:ml-4" v-text="product.name"></p>
-                                    <form action="" method="POST">
-                                        <button type="submit" class="text-gray-700 md:ml-4">
+                                        <button v-on:click.prevent="destroy(product.id)" type="submit" class="text-gray-700 md:ml-4">
                                             <small>(Supprimer le produit)</small>
                                         </button>
-                                    </form>
                                 </a>
                             </td>
                             <td class="justify-center md:justify-end md:flex mt-6">
                                 <div class="w-20 h-10">
                                     <div class="relative flex flex-row w-full h-8">
+                                        <button v-on:click.prevent="decrease(product.id)">-</button>
                                         <input
-                                            type="number"
+                                            readonly
                                             :value="product.quantity"
-                                            class="w-full font-semibold text-center text-gray-700 bg-gray-200 outline-none focus:outline-none hover:text-black focus:text-black" />
+                                            class="w-full mx-3 font-semibold text-center text-gray-700 bg-gray-200 outline-none focus:outline-none hover:text-black focus:text-black" />
+                                        <button v-on:click.prevent="increase(product.id)">+</button>
                                     </div>
                                 </div>
                             </td>
@@ -66,7 +66,7 @@
                                     Total
                                 </div>
                                 <div class="lg:px-4 lg:py-2 m-2 lg:text-lg font-bold text-center text-gray-900">
-                                    17,859.3€
+                                    {{ cartTotal }}
                                 </div>
                             </div>
                             <a href="#">
@@ -84,14 +84,44 @@
 </template>
 
 <script setup>
-import {onMounted} from "vue";
+import {onMounted, computed} from "vue";
 import useProduct from "../composables/products";
 import {formatPrice} from "../helper"
 
 const {
     products,
-    getProducts
+    getProducts,
+    increaseQuantity, decreaseQuantity, destroyProduct,cartCount
 } = useProduct()
+
+const emitter = require('tiny-emitter/instance')
+
+const cartTotal = computed(() => {
+    let price = Object.values(products.value)
+        .reduce((acc, product) => acc += product.price * product.quantity, 0);
+    console.log(price)
+    return formatPrice(price);
+})
+
+const increase = async (id) => {
+    console.log(id)
+    await increaseQuantity(id)
+    await getProducts()
+    console.log(cartCount.value)
+    emitter.emit('cartCountUpdated', cartCount.value)
+}
+const decrease = async (id) => {
+    await decreaseQuantity(id)
+    await getProducts()
+    console.log(cartCount.value)
+    emitter.emit('cartCountUpdated', cartCount.value)
+}
+const destroy = async (id) => {
+    await destroyProduct(id)
+    await getProducts()
+    console.log(cartCount.value)
+    emitter.emit('cartCountUpdated', cartCount.value)
+}
 
 onMounted(async() => {
     await getProducts();
