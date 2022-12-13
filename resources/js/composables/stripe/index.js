@@ -5,16 +5,27 @@ export default function useStripe () {
     const stripe = ref(null);
 
     const initialize = async () => {
-        stripe.value = Stripe(process.env.MIX_STRIPE_TEST_PUBLIC_KEY);
+        stripe.value = Stripe(process.env.MIX_STRIPE_TEST_PUBLIC_KEY, {
+            locale: 'fr'
+        });
 
         const clientSecret = await axios.post('/paymentIntent')
             .then(response => response.data.clientSecret)
             .catch(err => console.log(err))
 
 
-        elements.value = stripe.value.elements({ clientSecret })
+        const appearance = {
+            theme: 'minimal'
+        };
 
-        const paymentElement = elements.value.create('payment')
+        elements.value = stripe.value.elements({ clientSecret, appearance })
+
+        const paymentElementOptions = {
+            layout: "tabs",
+            defaultChecked: 'card'
+        };
+        
+        const paymentElement = elements.value.create('payment', paymentElementOptions)
         paymentElement.mount("#payment-element")
     }
 

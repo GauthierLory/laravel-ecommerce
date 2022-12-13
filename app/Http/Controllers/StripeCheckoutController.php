@@ -24,9 +24,9 @@ class StripeCheckoutController extends Controller
             // Create a PaymentIntent with amount and currency
             $paymentIntent = \Stripe\PaymentIntent::create([
                 'amount' => $cartTotal,
-                'currency' => 'cad',
-                'automatic_payment_methods' => [
-                    'enabled' => true,
+                'currency' => 'eur',
+                'payment_method_types' => [
+                    'card'
                 ],
                 'metadata' => [
                     'order_items' => (new CartRepository())->jsonOrderItems()
