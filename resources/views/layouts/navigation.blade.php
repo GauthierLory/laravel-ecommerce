@@ -9,19 +9,32 @@
                         <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
                     </a>
                 </div>
-
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
-                        {{ __('Liste des produits') }}
-                    </x-nav-link>
+                    @auth
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
+                            {{ __('Liste des produits') }}
+                        </x-nav-link>
+                    @else
+                        <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')">
+                            {{ __('Liste des produits') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('register') }}" :active="request()->routeIs('register')">
+                            {{ __('Inscription') }}
+                        </x-nav-link>
+                        <x-nav-link href="{{ route('login') }}" :active="request()->routeIs('login')">
+                            {{ __('Connexion') }}
+                        </x-nav-link>
+                    @endauth
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
+
+            @auth
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <navbar-cart></navbar-cart>
                 <x-dropdown align="right" width="48">
@@ -51,6 +64,7 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+            @endauth
 
             <!-- Hamburger -->
             <div class="-mr-2 flex items-center sm:hidden">
