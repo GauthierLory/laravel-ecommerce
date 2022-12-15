@@ -72,4 +72,9 @@ class CartRepository
         })
             ->toJson();
     }
+
+    public function clear()
+    {
+        \Cart::session(auth()->user()->id)->clear();
+    }
 }
