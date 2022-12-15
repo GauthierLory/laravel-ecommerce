@@ -1,32 +1,39 @@
 import {ref} from "vue";
+import {registerOrder} from "../../helper";
 
 export default function useStripe () {
     const elements = ref(null);
+    const clientSecret = ref(null);
+    const paymentElement = ref(null);
     const stripe = ref(null);
 
-    const initialize = async () => {
+    const getClientSecret = async () => {
         stripe.value = Stripe(process.env.MIX_STRIPE_TEST_PUBLIC_KEY, {
             locale: 'fr'
         });
 
-        const clientSecret = await axios.post('/paymentIntent')
-            .then(response => response.data.clientSecret)
+        let secret = await axios.post('/paymentIntent', {
+            headers: { "Content-Type": "application/json" }
+        })
+            .then((r) => r.data.clientSecret)
             .catch(err => console.log(err))
 
+        clientSecret.value = secret;
+    }
 
+    const loadStripeElement = async() => {
         const appearance = {
-            theme: 'minimal'
+            theme: 'flat'
         };
-
-        elements.value = stripe.value.elements({ clientSecret, appearance })
 
         const paymentElementOptions = {
             layout: "tabs",
-            defaultChecked: 'card'
         };
-        
-        const paymentElement = elements.value.create('payment', paymentElementOptions)
-        paymentElement.mount("#payment-element")
+
+        elements.value = stripe.value.elements({clientSecret: clientSecret.value, appearance});
+
+        paymentElement.value = elements.value.create('payment', paymentElementOptions)
+        paymentElement.value.mount("#payment-element");
     }
 
     const handleSubmit = async() => {
@@ -35,6 +42,7 @@ export default function useStripe () {
         const BASE_URL = "http://localhost:8000";
         const REDIRECT_URL = BASE_URL.concat("/dashboard");
 
+        await registerOrder()
         const { error } = await stripe.value.confirmPayment({
             elements: elements.value,
             confirmParams: {
@@ -84,9 +92,7 @@ export default function useStripe () {
         }
     }
 
-
 // ------- UI helpers -------
-
     const showMessage = (messageText) => {
         const messageContainer = document.querySelector("#payment-message");
 
@@ -114,7 +120,8 @@ export default function useStripe () {
     }
 
     return {
-        initialize,
+        getClientSecret,
+        loadStripeElement,
         checkStatus,
         showMessage,
         setLoading,

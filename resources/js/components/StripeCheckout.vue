@@ -1,41 +1,48 @@
 <template>
-    <form id="payment-form">
-        <div id="payment-element">
-            <!--Stripe.js injects the Payment Element-->
-        </div>
-        <button v-on:click.prevent="handleSubmit" id="submit">
-            <div class="spinner hidden" id="spinner"></div>
-            <span id="button-text">Payer</span>
-        </button>
-        <div id="payment-message" class="hidden"></div>
-    </form>
+    <div class="form-container bg-white">
+        <form id="payment-form">
+            <div id="payment-element">
+                <!--Stripe.js injects the Payment Element-->
+            </div>
+            <button id="submit" v-on:click.prevent="handleSubmit">
+                <div class="spinner hidden" id="spinner"></div>
+                <span id="button-text">Payer</span>
+            </button>
+            <div id="payment-message" class="hidden"></div>
+        </form>
+    </div>
 </template>
 
 <script setup>
-import {onMounted} from "vue";
-import useStripe from '../composables/stripe/index'
+import { onMounted } from 'vue';
+import useStripe from '../composables/stripe/index.js';
 
-const { initialize, checkStatus, handleSubmit } = useStripe();
+const {
+    getClientSecret,
+    loadStripeElement,
+    handleSubmit,
+    checkStatus
+} = useStripe();
 
-onMounted(async() => {
-    await initialize();
-})
+onMounted(async () => {
+    await getClientSecret();
+    await loadStripeElement();
+    // await checkStatus();
+});
 </script>
 
 <style scoped>
+/* Variables */
 * {
     box-sizing: border-box;
 }
-
-body {
+.form-container {
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     display: flex;
     justify-content: center;
     align-content: center;
-    height: 100vh;
-    width: 100vw;
 }
 
 form {
