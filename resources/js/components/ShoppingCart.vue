@@ -16,12 +16,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {{products.assciatedModel}}
                     <template v-for="product in products" v-bind:key="product.id">
                         <tr>
                             <td class="hidden pb-4 md:table-cell">
                                 <a href="#">
-<!--                                    <img :src="product.assciatedModel.image" class="w-20 rounded" alt="Thumbnail">-->
+                                    <img :src="product.image" class="w-20 rounded" alt="Thumbnail">
                                 </a>
                             </td>
                             <td>
@@ -45,10 +44,10 @@
                                 </div>
                             </td>
                             <td class="hidden text-right md:table-cell">
-              <span class="text-sm lg:text-base font-medium" v-text="formatPrice(product.price)"></span>
+                                <span class="text-sm lg:text-base font-medium" v-text="formatPrice(product.price)"></span>
                             </td>
                             <td class="text-right">
-              <span class="text-sm lg:text-base font-medium" v-text="formatPrice(product.price * product.quantity)"></span>
+                                <span class="text-sm lg:text-base font-medium" v-text="formatPrice(product.price * product.quantity)"></span>
                             </td>
                         </tr>
                     </template>
@@ -99,27 +98,22 @@ const emitter = require('tiny-emitter/instance')
 const cartTotal = computed(() => {
     let price = Object.values(products.value)
         .reduce((acc, product) => acc += product.price * product.quantity, 0);
-    console.log(price)
     return formatPrice(price);
 })
 
 const increase = async (id) => {
-    console.log(id)
     await increaseQuantity(id)
     await getProducts()
-    console.log(cartCount.value)
     emitter.emit('cartCountUpdated', cartCount.value)
 }
 const decrease = async (id) => {
     await decreaseQuantity(id)
     await getProducts()
-    console.log(cartCount.value)
     emitter.emit('cartCountUpdated', cartCount.value)
 }
 const destroy = async (id) => {
     await destroyProduct(id)
     await getProducts()
-    console.log(cartCount.value)
     emitter.emit('cartCountUpdated', cartCount.value)
 }
 

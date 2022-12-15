@@ -4,9 +4,3 @@
     </x-slot>
     <shopping-cart></shopping-cart>
 </x-app-layout>
-<script>
-    import ShoppingCart from "../../js/components/ShoppingCart";
-    export default {
-        components: {ShoppingCart}
-    }
-</script>

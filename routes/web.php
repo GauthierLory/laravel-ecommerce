@@ -16,19 +16,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-Route::get('/checkout', [StripeCheckoutController::class, 'create']);
-Route::post('/paymentIntent', [StripeCheckoutController::class, 'paymentIntent']);
-Route::get('/shoppingCart',ShoppingCartController::class)->name('cart.index');
-
 Route::get('/',[ProductController::class, 'index'])
     ->name('products.index');
 
-Route::resource('orders', OrderController::class);
-
-Route::get('/dashboard', [OrderController::class, 'index'])->middleware(['auth'])->name('dashboard');
+Route::middleware('auth:sanctum')->group(function() {
+    Route::resource('orders', OrderController::class);
+    Route::get('/dashboard', [OrderController::class, 'index'])->middleware(['auth'])->name('dashboard');
+    Route::get('/checkout', [StripeCheckoutController::class, 'create']);
+    Route::post('/paymentIntent', [StripeCheckoutController::class, 'paymentIntent']);
+    Route::get('/shoppingCart',ShoppingCartController::class)->name('cart.index');
+});
 
 require __DIR__.'/auth.php';
