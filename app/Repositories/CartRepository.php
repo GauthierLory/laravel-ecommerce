@@ -55,4 +55,26 @@ class CartRepository
     {
         return $this->content()->sum('quantity');
     }
+
+    public function total()
+    {
+        return \Cart::session(auth()->user()->id)->getTotal();
+    }
+
+    public function jsonOrderItems()
+    {
+        return $this->content()->map(function($item) {
+            return [
+                'name' => $item->name,
+                'quantity' => $item->quantity,
+                'price' => $item->price
+            ];
+        })
+            ->toJson();
+    }
+
+    public function clear()
+    {
+        \Cart::session(auth()->user()->id)->clear();
+    }
 }
